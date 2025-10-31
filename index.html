@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام إدارة الموظفين - Smart Net</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header py-2">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="#" class="d-flex align-items-center text-decoration-none">
+          <span class="fs-4 fw-bold text-white"><i class="bi bi-people-fill me-2"></i>Smart Net</span>
+          <span class="ms-2 badge bg-warning">v2.1</span>
+        </a>
+        <div>
+          <button id="add-employee-btn" type="button" class="btn btn-primary me-2">
+            <i class="bi bi-plus-circle"></i> <span class="lang-ar">إضافة موظف</span>
+          </button>
+          <div class="btn-group">
+            <span class="lang-switcher active" data-lang="ar">AR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="container mt-4">
+    <ul class="nav nav-tabs" id="mainTabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" data-tab="employees">
+          <i class="bi bi-people me-1"></i><span class="lang-ar">الموظفين</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="contracts">
+          <i class="bi bi-file-earmark-text me-1"></i><span class="lang-ar">العقود</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="evaluations">
+          <i class="bi bi-graph-up me-1"></i><span class="lang-ar">التقييمات</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="fines">
+          <i class="bi bi-cash-coin me-1"></i><span class="lang-ar">الغرامات</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container my-4 main-content">
+    <!-- الموظفين Tab -->
+    <div id="employees-tab" class="tab-pane active">
+      <div class="section-title">
+        <h2><i class="bi bi-people"></i> <span class="lang-ar">إدارة الموظفين</span></h2>
+        <p class="text-muted lang-ar">قائمة بجميع موظفي الشركة ومعلومات الاتصال بهم</p>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card total-card">
+            <i class="bi bi-people"></i>
+            <div class="count" id="total-count">0</div>
+            <div class="title lang-ar">إجمالي الموظفين</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card active-card">
+            <i class="bi bi-check-circle"></i>
+            <div class="count" id="active-count">0</div>
+            <div class="title lang-ar">موظفين نشطين</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card vacation-card">
+            <i class="bi bi-airplane"></i>
+            <div class="count" id="vacation-count">0</div>
+            <div class="title lang-ar">موظفين في إجازة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card inactive-card">
+            <i class="bi bi-x-circle"></i>
+            <div class="count" id="inactive-count">0</div>
+            <div class="title lang-ar">موظفين غير نشطين</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="filter-container">
+        <div class="row align-items-center">
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="input-group">
+              <input id="search-input" type="text" class="form-control lang-ar" placeholder="بحث عن موظف...">
+              <button class="btn btn-outline-primary" type="button" id="search-btn">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex justify-content-end">
+              <div class="me-3">
+                <label class="form-label me-2 lang-ar">الحالة:</label>
+                <select class="form-select form-select-sm d-inline-block w-auto" id="status-filter">
+                  <option value="all" class="lang-ar">الكل</option>
+                  <option value="نشط" class="lang-ar">نشط</option>
+                  <option value="إجازة" class="lang-ar">إجازة</option>
+                  <option value="غير نشط" class="lang-ar">غير نشط</option>
+                </select>
+              </div>
+              <button class="btn btn-outline-primary" id="export-btn" type="button">
+                <i class="bi bi-download me-1"></i><span class="lang-ar">تصدير</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employees Table -->
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th width="40">#</th>
+                  <th class="lang-ar">اسم الموظف</th>
+                  <th class="lang-ar">رقم الهاتف</th>
+                  <th class="lang-ar">الوظيفة</th>
+                  <th class="lang-ar">القسم</th>
+                  <th class="lang-ar">الحالة</th>
+                  <th width="260" class="lang-ar">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="employees-table-body">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="no-employees" class="no-data d-none">
+            <i class="bi bi-people"></i>
+            <h4 class="lang-ar">لا يوجد موظفين</h4>
+            <p class="text-muted lang-ar">لم يتم إضافة أي موظفين بعد. قم بإضافة موظف جديد لبدء الإدارة.</p>
+            <button id="add-first-employee" type="button" class="btn btn-primary">
+              <i class="bi bi-plus-circle"></i><span class="lang-ar">إضافة أول موظف</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- العقود Tab -->
+    <div id="contracts-tab" class="tab-pane">
+      <div class="section-title">
+        <h2><i class="bi bi-file-earmark-text"></i> <span class="lang-ar">إدارة العقود</span></h2>
+        <p class="text-muted lang-ar">عرض وتعديل عقود الموظفين في الشركة</p>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card contract-card">
+            <i class="bi bi-file-earmark-text"></i>
+            <div class="count" id="contracts-count">0</div>
+            <div class="title lang-ar">إجمالي العقود</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card active-card">
+            <i class="bi bi-check-circle"></i>
+            <div class="count" id="active-contracts">0</div>
+            <div class="title lang-ar">عقود نشطة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card warning-card">
+            <i class="bi bi-exclamation-triangle"></i>
+            <div class="count" id="expiring-contracts">0</div>
+            <div class="title lang-ar">عقود منتهية قريباً</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card inactive-card">
+            <i class="bi bi-x-circle"></i>
+            <div class="count" id="expired-contracts">0</div>
+            <div class="title lang-ar">عقود منتهية</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-container">
+        <div class="row">
+          <div class="col-md-8">
+            <button class="btn btn-primary" id="add-contract-btn" type="button">
+              <i class="bi bi-plus-circle"></i><span class="lang-ar">إضافة عقد جديد</span>
+            </button>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group">
+              <input id="contract-search-input" type="text" class="form-control lang-ar" placeholder="بحث عن عقد...">
+              <button class="btn btn-outline-primary" type="button" id="contract-search-btn">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th class="lang-ar">رقم العقد</th>
+                  <th class="lang-ar">الموظف</th>
+                  <th class="lang-ar">نوع العقد</th>
+                  <th class="lang-ar">تاريخ البدء</th>
+                  <th class="lang-ar">تاريخ الانتهاء</th>
+                  <th class="lang-ar">الحالة</th>
+                  <th class="lang-ar">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="contracts-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- التقييمات Tab -->
+    <div id="evaluations-tab" class="tab-pane">
+      <div class="section-title">
+        <h2><i class="bi bi-graph-up"></i> <span class="lang-ar">إدارة التقييمات</span></h2>
+        <p class="text-muted lang-ar">تقييم أداء الموظفين ومتابعة تطورهم</p>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card evaluation-card">
+            <i class="bi bi-graph-up"></i>
+            <div class="count" id="total-evaluations">0</div>
+            <div class="title lang-ar">إجمالي التقييمات</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card success-card">
+            <i class="bi bi-emoji-smile"></i>
+            <div class="count" id="excellent-evaluations">0</div>
+            <div class="title lang-ar">تقييمات ممتازة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card warning-card">
+            <i class="bi bi-emoji-neutral"></i>
+            <div class="count" id="good-evaluations">0</div>
+            <div class="title lang-ar">تقييمات جيدة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card danger-card">
+            <i class="bi bi-emoji-frown"></i>
+            <div class="count" id="poor-evaluations">0</div>
+            <div class="title lang-ar">تقييمات ضعيفة</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-container">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <label class="form-label lang-ar">الفترة</label>
+            <select class="form-select" id="evaluation-period">
+              <option class="lang-ar">الربع الأول 2023</option>
+              <option class="lang-ar">الربع الثاني 2023</option>
+              <option class="lang-ar" selected>الربع الثالث 2023</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="form-label lang-ar">المقيّم</label>
+            <select class="form-select" id="evaluation-evaluator">
+              <option class="lang-ar">جميع المقيّمين</option>
+              <option class="lang-ar">مدير الموارد البشرية</option>
+              <option class="lang-ar">مدير القسم</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-primary" id="add-evaluation-btn" type="button">
+          <i class="bi bi-plus-circle"></i><span class="lang-ar">إضافة تقييم جديد</span>
+        </button>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th class="lang-ar">اسم الموظف</th>
+                  <th class="lang-ar">التقييم حسب عدد العمليات</th>
+                  <th class="lang-ar">التقييم الكلي</th>
+                  <th class="lang-ar">عدد أيام التقييم</th>
+                  <th class="lang-ar">ملاحظات</th>
+                  <th class="lang-ar">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="evaluations-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الغرامات Tab -->
+    <div id="fines-tab" class="tab-pane">
+      <div class="section-title">
+        <h2><i class="bi bi-cash-coin"></i> <span class="lang-ar">إدارة الغرامات</span></h2>
+        <p class="text-muted lang-ar">تسجيل وإدارة الغرامات المالية على الموظفين</p>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card fines-card">
+            <i class="bi bi-cash-coin"></i>
+            <div class="count" id="total-fines">0</div>
+            <div class="title lang-ar">إجمالي الغرامات</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card paid-card">
+            <i class="bi bi-check-circle"></i>
+            <div class="count" id="paid-fines">0</div>
+            <div class="title lang-ar">غرامات مدفوعة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card pending-card">
+            <i class="bi bi-hourglass-split"></i>
+            <div class="count" id="pending-fines">0</div>
+            <div class="title lang-ar">غرامات معلقة</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="dashboard-card total-card">
+            <i class="bi bi-currency-exchange"></i>
+            <div class="count" id="fines-amount">0</div>
+            <div class="title lang-ar">إجمالي المبلغ (د.ع)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-container">
+        <div class="row">
+          <div class="col-md-8">
+            <button class="btn btn-primary" id="add-fine-btn" type="button">
+              <i class="bi bi-plus-circle"></i><span class="lang-ar">إضافة غرامة جديدة</span>
+            </button>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group">
+              <input id="fines-search-input" type="text" class="form-control lang-ar" placeholder="بحث عن غرامة...">
+              <button class="btn btn-outline-primary" type="button" id="fines-search-btn">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th class="lang-ar">الموظف</th>
+                      <th class="lang-ar">المبلغ (د.ع)</th>
+                      <th class="lang-ar">التاريخ</th>
+                      <th class="lang-ar">السبب</th>
+                      <th class="lang-ar">الحالة</th>
+                      <th class="lang-ar">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fines-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <h5><i class="bi bi-bar-chart"></i> <span class="lang-ar">إحصائيات الغرامات</span></h5>
+            <div class="stat-value" id="fines-stats-value">0</div>
+            <p class="stat-desc lang-ar">إجمالي الغرامات المعلقة</p>
+          </div>
+          <div class="stat-card">
+            <h5><i class="bi bi-cash-stack"></i> <span class="lang-ar">المدفوعات</span></h5>
+            <div class="stat-value" id="payments-stats-value">0</div>
+            <p class="stat-desc lang-ar">إجمالي المبالغ المدفوعة</p>
+          </div>
+          <div class="stat-card">
+            <h5><i class="bi bi-people"></i> <span class="lang-ar">أكثر الموظفين غرامات</span></h5>
+            <div id="top-employees-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add/Edit Employee Modal -->
+  <div class="form-modal" id="employee-form-modal">
+    <div class="form-container">
+      <div class="form-header">
+        <h5 class="mb-0 lang-ar" id="form-title">إضافة موظف جديد</h5>
+        <button type="button" class="btn-close btn-close-white" id="close-form"></button>
+      </div>
+      <div class="form-body">
+        <form id="employee-form">
+          <input type="hidden" id="employee-id">
+          <div class="text-center mb-4">
+            <img src="https://via.placeholder.com/150" id="employee-photo-preview" class="employee-img mb-2" alt="صورة الموظف" style="width: 120px; height: 120px;">
+            <input type="file" class="form-control d-none" id="photo-upload" accept="image/*">
+            <button type="button" class="btn btn-sm btn-outline-primary" id="photo-upload-btn">
+              <i class="bi bi-camera"></i><span class="lang-ar">رفع صورة</span>
+            </button>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">الاسم الأول</label>
+              <input type="text" class="form-control" id="first-name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">اسم العائلة</label>
+              <input type="text" class="form-control" id="last-name" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">البريد الإلكتروني</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">رقم الهاتف</label>
+              <input type="tel" class="form-control" id="phone" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">رقم العائلة</label>
+              <input type="tel" class="form-control" id="family-phone" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">الجنسية</label>
+              <select class="form-select" id="nationality" required>
+                <option value="" class="lang-ar">اختر الجنسية</option>
+                <option value="عراقي" class="lang-ar">عراقي</option>
+                <option value="سعودي" class="lang-ar">سعودي</option>
+                <option value="مصري" class="lang-ar">مصري</option>
+                <option value="أخرى" class="lang-ar">أخرى</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">الوظيفة</label>
+              <select class="form-select" id="job" required>
+                <option value="" class="lang-ar">اختر الوظيفة</option>
+                <option value="مساعد" class="lang-ar">مساعد</option>
+                <option value="مروج ميداني" class="lang-ar">مروج ميداني</option>
+                <option value="متابعة تيمات" class="lang-ar">متابعة تيمات</option>
+                <option value="قائد فريق" class="lang-ar">قائد فريق</option>
+                <option value="المبيعات" class="lang-ar">المبيعات</option>
+                <option value="مبرمج" class="lang-ar">مبرمج</option>
+                <option value="مصممة" class="lang-ar">مصممة</option>
+                <option value="مدير مشاريع" class="lang-ar">مدير مشاريع</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">القسم</label>
+              <select class="form-select" id="department" required>
+                <option value="" class="lang-ar">اختر القسم</option>
+                <option value="الصيانة" class="lang-ar">الصيانة</option>
+                <option value="إدارة الصيانة" class="lang-ar">إدارة الصيانة</option>
+                <option value="التسويق" class="lang-ar">التسويق</option>
+                <option value="المبيعات" class="lang-ar">المبيعات</option>
+                <option value="تطوير البرمجيات" class="lang-ar">تطوير البرمجيات</option>
+                <option value="التصميم الجرافيكي" class="lang-ar">التصميم الجرافيكي</option>
+                <option value="إدارة المشاريع" class="lang-ar">إدارة المشاريع</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">تاريخ التعيين</label>
+              <input type="date" class="form-control" id="hire-date" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">الراتب الأساسي (د.ع)</label>
+              <input type="number" class="form-control" id="salary" min="0" step="1" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required lang-ar">الحالة الوظيفية</label>
+            <div class="d-flex flex-wrap">
+              <div class="form-check me-4">
+                <input class="form-check-input" type="radio" name="status" id="active-status" value="نشط" checked>
+                <label class="form-check-label lang-ar" for="active-status">نشط</label>
+              </div>
+              <div class="form-check me-4">
+                <input class="form-check-input" type="radio" name="status" id="vacation-status" value="إجازة">
+                <label class="form-check-label lang-ar" for="vacation-status">إجازة</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="inactive-status" value="غير نشط">
+                <label class="form-check-label lang-ar" for="inactive-status">غير نشط</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-form"><span class="lang-ar">إلغاء</span></button>
+        <button type="button" class="btn btn-primary" id="save-employee"><span class="lang-ar">حفظ الموظف</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Employee Modal -->
+  <div class="form-modal" id="view-employee-modal">
+    <div class="form-container">
+      <div class="form-header">
+        <h5 class="mb-0 lang-ar">تفاصيل الموظف</h5>
+        <button type="button" class="btn-close btn-close-white" id="close-view"></button>
+      </div>
+      <div class="view-modal-content">
+        <div class="employee-details">
+          <img id="view-photo" src="" alt="صورة الموظف">
+          <div>
+            <h3 id="view-name"></h3>
+            <p class="text-muted mb-0" id="view-id"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="detail-item"><span class="detail-label lang-ar">البريد الإلكتروني:</span><span class="detail-value" id="view-email"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">رقم الهاتف:</span><span class="detail-value" id="view-phone"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">رقم العائلة:</span><span class="detail-value" id="view-family-phone"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">الجنسية:</span><span class="detail-value" id="view-nationality"></span></div>
+          </div>
+          <div class="col-md-6">
+            <div class="detail-item"><span class="detail-label lang-ar">الوظيفة:</span><span class="detail-value" id="view-job"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">القسم:</span><span class="detail-value" id="view-department"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">تاريخ التعيين:</span><span class="detail-value" id="view-hire-date"></span></div>
+            <div class="detail-item"><span class="detail-label lang-ar">الراتب:</span><span class="detail-value" id="view-salary"></span></div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label lang-ar">الحالة:</span>
+          <span class="detail-value"><span id="view-status" class="badge"></span></span>
+        </div>
+
+        <div class="mt-4">
+          <h5 class="mb-3"><i class="bi bi-file-earmark-text me-2"></i> العقود</h5>
+          <div id="employee-contracts-container"></div>
+        </div>
+        <div class="mt-4">
+          <h5 class="mb-3"><i class="bi bi-graph-up me-2"></i> التقييمات</h5>
+          <div id="employee-evaluations-container"></div>
+        </div>
+        <div class="mt-4">
+          <h5 class="mb-3"><i class="bi bi-cash-coin me-2"></i> الغرامات</h5>
+          <div id="employee-fines-container"></div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="close-view-btn"><span class="lang-ar">إغلاق</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Contract Modal -->
+  <div class="form-modal" id="contract-form-modal">
+    <div class="form-container">
+      <div class="form-header">
+        <h5 class="mb-0 lang-ar" id="contract-form-title">إضافة عقد جديد</h5>
+        <button type="button" class="btn-close btn-close-white" id="close-contract-form"></button>
+      </div>
+      <div class="form-body">
+        <form id="contract-form">
+          <input type="hidden" id="contract-id">
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label required lang-ar">الموظف</label>
+              <select class="form-select" id="contract-employee" required>
+                <option value="" class="lang-ar">اختر الموظف</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">نوع العقد</label>
+              <select class="form-select" id="contract-type" required>
+                <option value="" class="lang-ar">اختر نوع العقد</option>
+                <option value="دائم" class="lang-ar">دائم</option>
+                <option value="مؤقت" class="lang-ar">مؤقت</option>
+                <option value="تدريب" class="lang-ar">تدريب</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">رقم العقد</label>
+              <input type="text" class="form-control" id="contract-number" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">تاريخ البدء</label>
+              <input type="date" class="form-control" id="contract-start" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">تاريخ الانتهاء</label>
+              <input type="date" class="form-control" id="contract-end" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label lang-ar">ملاحظات</label>
+            <textarea class="form-control" id="contract-notes" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-contract-form"><span class="lang-ar">إلغاء</span></button>
+        <button type="button" class="btn btn-primary" id="save-contract"><span class="lang-ar">حفظ العقد</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Evaluation Modal -->
+  <div class="form-modal" id="evaluation-form-modal">
+    <div class="form-container">
+      <div class="form-header">
+        <h5 class="mb-0 lang-ar" id="evaluation-form-title">إضافة تقييم جديد</h5>
+        <button type="button" class="btn-close btn-close-white" id="close-evaluation-form"></button>
+      </div>
+      <div class="form-body">
+        <form id="evaluation-form">
+          <input type="hidden" id="evaluation-id">
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label required lang-ar">الموظف</label>
+              <select class="form-select" id="evaluation-employee" required>
+                <option value="" class="lang-ar">اختر الموظف</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label required lang-ar">التقييم حسب عدد العمليات</label>
+              <input type="number" class="form-control" id="operations-evaluation" min="0" max="100" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label required lang-ar">التقييم الكلي</label>
+              <input type="number" class="form-control" id="overall-evaluation" min="0" max="100" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label required lang-ar">عدد أيام التقييم</label>
+              <input type="number" class="form-control" id="evaluation-days" min="1" max="365" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label lang-ar">ملاحظات</label>
+            <textarea class="form-control" id="evaluation-notes" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-evaluation-form"><span class="lang-ar">إلغاء</span></button>
+        <button type="button" class="btn btn-primary" id="save-evaluation"><span class="lang-ar">حفظ التقييم</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Fine Modal -->
+  <div class="form-modal" id="fine-form-modal">
+    <div class="form-container">
+      <div class="form-header">
+        <h5 class="mb-0 lang-ar" id="fine-form-title">إضافة غرامة جديدة</h5>
+        <button type="button" class="btn-close btn-close-white" id="close-fine-form"></button>
+      </div>
+      <div class="form-body">
+        <form id="fine-form">
+          <input type="hidden" id="fine-id">
+          <div class="row mb-3">
+            <div class="col-md-12">
+              <label class="form-label required lang-ar">الموظف</label>
+              <select class="form-select" id="fine-employee" required>
+                <option value="" class="lang-ar">اختر الموظف</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">المبلغ (د.ع)</label>
+              <input type="number" class="form-control" id="fine-amount" min="0" step="1" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label required lang-ar">التاريخ</label>
+              <input type="date" class="form-control" id="fine-date" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required lang-ar">السبب</label>
+            <textarea class="form-control" id="fine-reason" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label lang-ar">الحالة</label>
+            <div class="d-flex flex-wrap">
+              <div class="form-check me-4">
+                <input class="form-check-input" type="radio" name="fine-status" id="pending-status" value="معلقة" checked>
+                <label class="form-check-label lang-ar" for="pending-status">معلقة</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="fine-status" id="paid-status" value="مدفوعة">
+                <label class="form-check-label lang-ar" for="paid-status">مدفوعة</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="cancel-fine-form"><span class="lang-ar">إلغاء</span></button>
+        <button type="button" class="btn btn-primary" id="save-fine"><span class="lang-ar">حفظ الغرامة</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="confirmation-modal" id="confirmation-modal">
+    <div class="confirmation-box">
+      <h4 class="mb-3 lang-ar" id="confirmation-title">تأكيد الحذف</h4>
+      <p id="confirmation-message" class="lang-ar">هل أنت متأكد من أنك تريد حذف هذا السجل؟</p>
+      <div class="confirmation-buttons">
+        <button type="button" class="btn btn-secondary" id="cancel-delete"><span class="lang-ar">إلغاء</span></button>
+        <button type="button" class="btn btn-danger" id="confirm-delete"><span class="lang-ar">حذف</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Button -->
+  <div class="floating-btn" id="floating-btn" title="مساعدة">
+    <i class="bi bi-question-lg"></i>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
