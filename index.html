@@ -1,124 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <meta name="description" content="واجهة حديثة وخفيفة – قالب جاهز للنشر على GitHub Pages" />
-  <title>موقعي الحديث</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
-</head>
-<body>
-  <a class="skip-link" href="#content">تجاوز إلى المحتوى</a>
-  <header class="site-header">
-    <nav class="container nav">
-      <a class="brand" href="./" aria-label="الصفحة الرئيسية">
-        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" /></svg>
-        <span>موقعي الحديث</span>
-      </a>
-      <button id="themeToggle" class="btn ghost" aria-label="تبديل الوضع الليلي">🌓</button>
-      <button id="menuToggle" class="btn ghost nav-toggle" aria-expanded="false" aria-controls="primary-menu">☰</button>
-      <ul id="primary-menu" class="menu">
-        <li><a href="#features">المزايا</a></li>
-        <li><a href="#about">عن المشروع</a></li>
-        <li><a href="#contact">تواصل</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main id="content">
-    <section class="hero">
-      <div class="container grid-2">
-        <div>
-          <h1>واجهة أنيقة، أداء سريع</h1>
-          <p>قالب HTML/CSS/JS حديث يدعم العربية (RTL)، وضع ليلي، وتحسينات إمكانية الوصول — مناسب للنشر مباشرةً على GitHub.</p>
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/new">انشر على GitHub</a>
-            <a class="btn" href="#features">اكتشف المزايا</a>
-          </div>
-        </div>
-        <div class="card glass">
-          <h2>لماذا هذا القالب؟</h2>
-          <ul class="list-check">
-            <li>تصميم متجاوب بالكامل</li>
-            <li>دعم RTL وخط Cairo</li>
-            <li>وضع داكن تلقائي + يدوي</li>
-            <li>كود منظم سهل التطوير</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="section">
-      <div class="container">
-        <h2>المزايا</h2>
-        <div class="feature-grid">
-          <article class="feature">
-            <h3>سرعة</h3>
-            <p>أصول قليلة، بدون أُطر ثقيلة. يعتمد على CSS و JS خفيفين.</p>
-          </article>
-          <article class="feature">
-            <h3>إمكانية الوصول</h3>
-            <p>تباين ألوان جيد، روابط تخطي، عناصر ARIA حيث يلزم.</p>
-          </article>
-          <article class="feature">
-            <h3>قابلية التخصيص</h3>
-            <p>متغيرات CSS للألوان والمسافات، هيكل واضح للملفات.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="section alt">
-      <div class="container grid-2">
-        <div>
-          <h2>عن المشروع</h2>
-          <p>هذا القالب نقطة انطلاق لمشاريع صغيرة، صفحات تعريفية، أو وثائق. عدّل المحتوى بسهولة وأضف أقساماً حسب حاجتك.</p>
-        </div>
-        <div class="card">
-          <h3>التقنيات</h3>
-          <ul>
-            <li>HTML دلالي</li>
-            <li>CSS حديث مع متغيرات ووضع داكن</li>
-            <li>JavaScript بسيط (بدون اعتماديات)</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="section">
-      <div class="container">
-        <h2>تواصل معنا</h2>
-        <form class="card form" name="contact" method="post" data-netlify="true">
-          <label>
-            <span>الاسم</span>
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            <span>البريد الإلكتروني</span>
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            <span>رسالتك</span>
-            <textarea name="message" rows="5" required></textarea>
-          </label>
-          <button class="btn primary" type="submit">إرسال</button>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <small>© <span id="year"></span> جميع الحقوق محفوظة.</small>
-      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
-    </div>
-  </footer>
-
-  <script src="assets/js/app.js" defer></script>
-</body>
-</html>
